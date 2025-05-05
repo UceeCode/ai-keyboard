@@ -8,6 +8,12 @@
 - **AI Integration**: Uses AI and machine learning algorithms to recognize hand gestures and map them to corresponding keys.
 - **Touchless Interaction**: Eliminates the need for physical contact with a keyboard.
 
+## Demo Video
+
+[![AI-Keyboard Demo](video/preview.png)](video/demovideo.mov)
+
+A demonstration video showcasing the **AI-Keyboard** in action is available in the repository at `video/demovideo.mov`. Please download and play it to see the gesture-based typing.
+
 ## Prerequisites
 
 Before running **AI-Keyboard**, make sure you have the following installed:

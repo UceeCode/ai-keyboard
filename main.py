@@ -3,12 +3,20 @@ from cvzone.HandTrackingModule import HandDetector
 import pyautogui
 import time
 
+# Initialize webcam
 cap = cv2.VideoCapture(0)
-cap.set(3, 1280)
-cap.set(4, 720)
+cam_width = 1280
+cam_height = 720
+cap.set(3, cam_width)
+cap.set(4, cam_height)
 
+# Get screen size
+screen_width, screen_height = pyautogui.size()
+
+# Hand detector
 detector = HandDetector(detectionCon=0.8)
 
+# Keyboard layout
 keys = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
     ["A", "S", "D", "F", "G", "H", "J", "K", "L", ";"],
@@ -48,14 +56,12 @@ for i in range(len(keys)):
             buttonList.append(Button([100 * j + 50, 100 * i + 50], key))
 
 prev_hover = None
-last_click_time = 0  # Time of the last button click
-
-delay = 8
+last_click_time = 0
+delay = 8  # seconds
 
 while True:
     success, img = cap.read()
     img = cv2.flip(img, 1)
-
     lmList = []
 
     hands, img = detector.findHands(img)
@@ -87,19 +93,25 @@ while True:
 
                 current_time = time.time()
 
-                # If 4 seconds have passed or it's a new button
                 if prev_hover != hoveredButton or current_time - last_click_time > delay:
+                    # Type key
                     if button.text == "Space":
                         pyautogui.write(" ")
                     elif button.text == "Delete":
                         pyautogui.press("backspace")
                     else:
                         pyautogui.write(button.text)
-                    print(button.text)
+                    print(f"Typed: {button.text}")
+
+                    # Simulate mouse click at screen position of the button center
+                    screen_x = int((x + w / 2) * screen_width / cam_width)
+                    screen_y = int((y + h / 2) * screen_height / cam_height)
+                    pyautogui.click(screen_x, screen_y)
+                    print(f"Clicked at screen position: ({screen_x}, {screen_y})")
 
                     last_click_time = current_time
 
-                    # Show red click flash
+                    # Show red flash
                     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), thickness=-1)
                     cv2.putText(img, button.text, (text_x, text_y), font, font_scale, (255, 255, 255), font_thickness)
 
